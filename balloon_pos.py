@@ -8,6 +8,10 @@ from BalloonNetCNNBOX import BalloonNetCNN
 from BalloonBoxDataset import BalloonBBoxDataset
 from iou import calculate_iou
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
+
 # ✅ 2️⃣ Load & Preprocess Image Data
 def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv"):
     transform = transforms.Compose([
