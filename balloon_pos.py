@@ -8,8 +8,7 @@ from BalloonNetCNNBOX import BalloonNetCNN
 from BalloonBoxDataset import BalloonBBoxDataset
 from iou import calculate_iou
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+
 
 
 # ✅ 2️⃣ Load & Preprocess Image Data
@@ -35,6 +34,9 @@ def train_model(model, train_loader, num_epochs=500, learning_rate=0.001):
     for epoch in range(num_epochs):
         for images, labels in train_loader:
             # 🔹 Move images & labels to device (CPU/GPU)
+            images = images.to(device)
+            labels = labels.to(device)
+
             # 🔹 Zero the gradients
             optimizer.zero_grad()
             # 🔹 Forward pass
@@ -57,6 +59,9 @@ def test_model(model, test_loader, iou_threshold=0.5):
 
     with torch.no_grad():
         for images, labels in test_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
             outputs = model(images)
             mse_total += criterion(outputs, labels).item()
 
@@ -81,10 +86,12 @@ def save_model(model, filename="balloon_detector.pth"):
 
 # ✅ 6️⃣ Run Everything
 if __name__ == "__main__":
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     train_loader = load_data(folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train_split.csv")
     test_loader = load_data(folder = "BalloonDataset/test", csv = "BalloonDataset/labels_test_split.csv")  # You might want to split into train & test folders
     # model = BalloonNet()
     model = BalloonNetCNN()
+    model.to(device)
 
     train_model(model, train_loader)
     test_model(model, test_loader)
