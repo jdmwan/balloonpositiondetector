@@ -15,11 +15,15 @@ from iou import calculate_iou
 def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv"):
     transform = transforms.Compose([
         # 🔹 Apply transformations (Resize, ToTensor, Normalize)
-        transforms.Resize((256,256)),
+        transforms.Resize((320,320)),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomRotation(30),
         transforms.ToTensor(),
-        transforms.Normalize([0.485,0.456,0.406],[0.229, 0.224, 0.225])
+        transforms.Normalize([0.485,0.456,0.406],[0.229, 0.224, 0.225]),
+        # some transforms to try
+        transforms.ColorJitter(brightness=0.2, contrast=0.2),
+        transforms.GaussianBlur(kernel_size=3),
+        transforms.RandomPerspective(distortion_scale=0.2),
     ])
     # train_dataset = ImageFolder(root=folder, transform=transform)
     dataset= BalloonBBoxDataset(csv_file=csv, image_dir=folder, transform=transform)
@@ -27,7 +31,7 @@ def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonData
     return train_loader
 
 # ✅ 3️⃣ Define Training Loop
-def train_model(model, train_loader, num_epochs=500, learning_rate=0.001):
+def train_model(model, train_loader, num_epochs=100, learning_rate=0.001):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()  # 🔹 Define loss function
 
