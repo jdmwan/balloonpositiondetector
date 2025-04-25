@@ -26,10 +26,13 @@ class BalloonNetCNN(nn.Module):
             nn.Flatten(),                                  # 64 x 4 x 4 = 1024
             nn.Linear(64 * self.height * self.width, 128),
             nn.ReLU(),
-            nn.Linear(128, 4)                              # Output: 2 classes
+            nn.Linear(128, 64),
+            nn.ReLU(),
+            nn.Linear(64, 4)                              # Output: 2 classes
         )
 
     def forward(self, x):
         x = self.conv_layers(x)
         x = self.fc_layers(x)
         return x
+

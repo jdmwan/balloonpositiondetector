@@ -31,7 +31,7 @@ def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonData
     return train_loader
 
 # ✅ 3️⃣ Define Training Loop
-def train_model(model, train_loader, num_epochs=100, learning_rate=0.001):
+def train_model(model, train_loader, num_epochs=2000, learning_rate=0.001):
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     criterion = nn.MSELoss()  # 🔹 Define loss function
 
@@ -52,6 +52,8 @@ def train_model(model, train_loader, num_epochs=100, learning_rate=0.001):
             # 🔹 Update weights
             optimizer.step()
         print(f"Epoch {epoch+1}, Loss: {loss.item()}")
+        if loss.item() < 5:
+            return
 
 # ✅ 4️⃣ Evaluate the Model
 def test_model(model, test_loader, iou_threshold=0.5):
@@ -83,7 +85,7 @@ def test_model(model, test_loader, iou_threshold=0.5):
 
 
 # ✅ 5️⃣ Save & Load Model
-def save_model(model, filename="balloon_detector.pth"):
+def save_model(model, filename="balloon_pos.pth"):
     torch.save(model.state_dict(), filename)
     print(f"Model saved to {filename}")
 
