@@ -1,0 +1,24 @@
+{
+    "name": "ROS2 Foxy Dev",
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+    "workspaceFolder": "/home/dev_ws",
+    "mounts": [
+        "source=ros2_ws,target=/home/dev_ws,type=volume"
+    ],
+    "runArgs": [
+        "-p", "10000:10000"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-python.python",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "postCreateCommand": "colcon build --event-handlers console_cohesion+ --log-base log > build_log.txt 2>&1"
+
+}
