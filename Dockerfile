@@ -1,27 +1,45 @@
 # Use ROS 2 Foxy base image
 FROM ros:foxy-ros-base
 
+# Install dependencies
+RUN apt update && apt install -y \
+    python3-pip \
+    python3-colcon-common-extensions \
+    ros-foxy-cv-bridge \
+    git \
+    build-essential \
+    cmake \
+    python3-dev
+
+# Upgrade pip and install Python packages
+RUN python3 -m pip install --upgrade pip && \
+    pip3 install \
+    opencv-python \
+    torch \
+    torchvision \
+    numpy \
+    pandas
+
 # Set up the ROS 2 workspace
 RUN mkdir -p /home/dev_ws/src
-
-# Set the workspace as the working directory
 WORKDIR /home/dev_ws
 
 # Clone Unity’s ROS-TCP-Endpoint
-RUN git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint /home/dev_ws/src/ros_tcp_endpoint -b ROS2v0.7.0
+RUN git clone -b ROS2v0.7.0 https://github.com/Unity-Technologies/ROS-TCP-Endpoint /home/dev_ws/src/ros_tcp_endpoint
 
 # Create a custom ROS 2 package
 RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && \
     cd /home/dev_ws/src && \
     ros2 pkg create --build-type ament_python my_package"
 
-# Build the workspace after adding packages
+# Build the workspace
 RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && \
     cd /home/dev_ws && \
     colcon build"
 
-# Source ROS 2 every time a new shell starts
-RUN echo "source /opt/ros/foxy/setup.bash" >> ~/.bashrc
+# Source ROS 2 setup files in every shell
+RUN echo "source /opt/ros/foxy/setup.bash" >> /root/.bashrc && \
+    echo "source /home/dev_ws/install/setup.bash" >> /root/.bashrc
 
-# Set the workspace as the working directory
+# Set the workspace as the working directory (optional, just good for dev)
 WORKDIR /home/dev_ws

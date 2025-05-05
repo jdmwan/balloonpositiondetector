@@ -6,7 +6,6 @@ from scipy.integrate import odeint
 Kt = 0.05       # Nm/A
 Ke = 0.05       # V·s/rad
 R = 1.0         # Ohms
-
 I = 0.0088   # kg·m²
 
 # Desired speed

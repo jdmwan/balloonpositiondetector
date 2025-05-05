@@ -12,7 +12,7 @@ class BalloonNetCNN(nn.Module):
             nn.Conv2d(3, 16, kernel_size=3, padding=1),   # 3 → 16 channels, 32x32
             nn.ReLU(),
             # nn.MaxPool2d(2, 2),                           # 16 x 16 x 16
-
+            
             nn.Conv2d(16, 32, kernel_size=3, padding=1),  # 16 → 32 channels, 16x16
             nn.ReLU(),
             # nn.MaxPool2d(2, 2),                           # 32 x 8 x 8

@@ -1,24 +1,30 @@
 {
     "name": "ROS2 Foxy Dev",
     "build": {
-        "dockerfile": "../Dockerfile"
+      "dockerfile": "../Dockerfile"
     },
     "workspaceFolder": "/home/dev_ws",
     "mounts": [
-        "source=ros2_ws,target=/home/dev_ws,type=volume"
+      "source=ros2_ws,target=/home/dev_ws,type=volume"
     ],
     "runArgs": [
-        "-p", "10000:10000"
+      "-p", "10000:10000",        // Unity-ROS TCP
+      "--init",                   // Helps with signal handling
+      "--privileged"              // Optional: useful if using USB/camera access later
     ],
     "customizations": {
-        "vscode": {
-            "extensions": [
-                "ms-vscode.cpptools",
-                "ms-python.python",
-                "ms-azuretools.vscode-docker"
-            ]
+      "vscode": {
+        "extensions": [
+          "ms-vscode.cpptools",
+          "ms-python.python",
+          "ms-azuretools.vscode-docker"
+        ],
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash"
         }
+      }
     },
-    "postCreateCommand": "colcon build --event-handlers console_cohesion+ --log-base log > build_log.txt 2>&1"
-
-}
+    "postCreateCommand": "source /opt/ros/foxy/setup.bash && colcon build --event-handlers console_cohesion+ --log-base log > build_log.txt 2>&1",
+    "remoteUser": "root"
+  }
+  
