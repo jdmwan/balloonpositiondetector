@@ -4,8 +4,8 @@ import torch.nn as nn
 class BalloonNetCNN(nn.Module):
     def __init__(self):
         super(BalloonNetCNN, self).__init__()
-        self.height = 40
-        self.width = 40
+        self.height = 104
+        self.width = 46
 
         # Input: 3 x 32 x 32 (RGB image)
         self.conv_layers = nn.Sequential(

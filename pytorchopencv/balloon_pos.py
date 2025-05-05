@@ -15,7 +15,7 @@ from iou import calculate_iou
 def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv"):
     transform = transforms.Compose([
         # 🔹 Apply transformations (Resize, ToTensor, Normalize)
-        transforms.Resize((320,320)),
+        transforms.Resize((832,368)),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomRotation(30),
         transforms.ToTensor(),
@@ -72,7 +72,8 @@ def test_model(model, test_loader, iou_threshold=0.5):
             mse_total += criterion(outputs, labels).item()
 
             for pred, true in zip(outputs, labels):
-                iou = calculate_iou(pred, true)
+                pred_scaled = pred*8
+                iou = calculate_iou(pred_scaled, true)
                 if iou >= iou_threshold:
                     correct += 1
                 total += 1
