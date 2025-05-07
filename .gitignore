@@ -1,5 +1,6 @@
 venv/
 pytorchopencv/__pycache__/
 pytorchopencv/balloon_detector.pth
+pytorchopencv/balloon_pos.pth
 Dockerfile
 .devcontainer/

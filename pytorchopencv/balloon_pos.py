@@ -9,8 +9,6 @@ from BalloonBoxDataset import BalloonBBoxDataset
 from iou import calculate_iou
 
 
-
-
 # ✅ 2️⃣ Load & Preprocess Image Data
 def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv"):
     transform = transforms.Compose([
@@ -40,19 +38,21 @@ def train_model(model, train_loader, num_epochs=2000, learning_rate=0.001):
             # 🔹 Move images & labels to device (CPU/GPU)
             images = images.to(device)
             labels = labels.to(device)
+            scaling_vector = torch.tensor([1/8.02,1/8.15,1/8.02,1/8.15]).to(device)
 
             # 🔹 Zero the gradients
             optimizer.zero_grad()
             # 🔹 Forward pass
             output = model(images)
+            labels_scaled = labels*scaling_vector
             # 🔹 Compute loss
-            loss = criterion(output, labels)
+            loss = criterion(output, labels_scaled)
             # 🔹 Backward pass (gradient calculation)
             loss.backward()
             # 🔹 Update weights
             optimizer.step()
         print(f"Epoch {epoch+1}, Loss: {loss.item()}")
-        if loss.item() < 5:
+        if loss.item() < 0.2:
             return
 
 # ✅ 4️⃣ Evaluate the Model
@@ -67,12 +67,15 @@ def test_model(model, test_loader, iou_threshold=0.5):
         for images, labels in test_loader:
             images = images.to(device)
             labels = labels.to(device)
+            scaling_vector = torch.tensor([8.02,8.15,8.02,8.15]).to(device)
 
             outputs = model(images)
             mse_total += criterion(outputs, labels).item()
 
             for pred, true in zip(outputs, labels):
-                pred_scaled = pred*8
+                pred_scaled = pred*scaling_vector
+                print(pred_scaled)
+                print(labels)
                 iou = calculate_iou(pred_scaled, true)
                 if iou >= iou_threshold:
                     correct += 1
