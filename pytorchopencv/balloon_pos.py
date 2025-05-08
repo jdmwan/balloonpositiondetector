@@ -100,8 +100,8 @@ def save_model(model, filename="balloon_pos.pth"):
 # ✅ 6️⃣ Run Everything
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    train_loader = load_data(folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train_split.csv")
-    test_loader = load_data(folder = "BalloonDataset/test", csv = "BalloonDataset/labels_test_split.csv")  # You might want to split into train & test folders
+    train_loader = load_data(folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv")
+    test_loader = load_data(folder = "BalloonDataset/test", csv = "BalloonDataset/labels_test.csv")  # You might want to split into train & test folders
     # model = BalloonNet()
     model = BalloonNetCNN()
     model.to(device)
