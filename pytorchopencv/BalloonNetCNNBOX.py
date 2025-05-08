@@ -24,7 +24,9 @@ class BalloonNetCNN(nn.Module):
 
         self.fc_layers = nn.Sequential(
             nn.Flatten(),                                  # 64 x 4 x 4 = 1024
-            nn.Linear(64 * self.height * self.width, 128),
+            nn.Linear(64 * self.height * self.width, 256),
+            nn.ReLU(),
+            nn.Linear(256, 128),
             nn.ReLU(),
             nn.Linear(128, 64),
             nn.ReLU(),

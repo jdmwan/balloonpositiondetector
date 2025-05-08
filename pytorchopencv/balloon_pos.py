@@ -29,9 +29,11 @@ def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonData
     return train_loader
 
 # ✅ 3️⃣ Define Training Loop
-def train_model(model, train_loader, num_epochs=2000, learning_rate=0.001):
-    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-    criterion = nn.MSELoss()  # 🔹 Define loss function
+def train_model(model, train_loader, num_epochs=500, learning_rate=0.0005):
+    optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+    scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=100, gamma= 0.1)
+    # criterion = nn.MSELoss()  # 🔹 Define loss function
+    criterion = nn.SmoothL1Loss()
 
     for epoch in range(num_epochs):
         for images, labels in train_loader:
@@ -52,8 +54,10 @@ def train_model(model, train_loader, num_epochs=2000, learning_rate=0.001):
             # 🔹 Update weights
             optimizer.step()
         print(f"Epoch {epoch+1}, Loss: {loss.item()}")
-        if loss.item() < 0.2:
+        scheduler.step()
+        if loss.item() == 0.02:
             return
+
 
 # ✅ 4️⃣ Evaluate the Model
 def test_model(model, test_loader, iou_threshold=0.5):
@@ -61,7 +65,8 @@ def test_model(model, test_loader, iou_threshold=0.5):
     correct = 0
     total = 0
     mse_total = 0.0
-    criterion = nn.MSELoss()
+    # criterion = nn.MSELoss()
+    criterion = nn.SmoothL1Loss()
 
     with torch.no_grad():
         for images, labels in test_loader:
@@ -74,8 +79,6 @@ def test_model(model, test_loader, iou_threshold=0.5):
 
             for pred, true in zip(outputs, labels):
                 pred_scaled = pred*scaling_vector
-                print(pred_scaled)
-                print(labels)
                 iou = calculate_iou(pred_scaled, true)
                 if iou >= iou_threshold:
                     correct += 1
