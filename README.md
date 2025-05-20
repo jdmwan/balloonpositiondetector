@@ -75,8 +75,9 @@ python3 imgSubscriber.py
 ## 🎥 Demo
 
 > [!NOTE]  
-> Video demo coming soon – shows Unity camera following a moving balloon while ROS2 receives positional updates in real time.
+> Better video demo coming soon – shows Unity camera following a moving balloon while ROS2 receives positional updates in real time.
 
+Quick Demo [Here](https://youtu.be/vF60rL2w_oo)
 ## ⚠️ Notes
 
 - Model weights (`.pth`) are **.gitignored** due to GitHub's 100MB limit. Upload your own or contact me for access.
