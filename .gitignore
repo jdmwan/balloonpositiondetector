@@ -2,11 +2,13 @@ venv/
 pytorchopencv/__pycache__/
 pytorchopencv/balloon_detector.pth
 pytorchopencv/balloon_pos.pth
-pytorchopencv/balloonDataset/
-pytorchopencv/balloonDatasetdetect/
-pytorchopencv/balloonDatasetold/
+pytorchopencv/BalloonDataset/
+pytorchopencv/BalloonDatasetdetect/
+pytorchopencv/BalloonDatasetold/
 pytorchopencv/balloon_detector.py
+pytorchopencv/BalloonNetCNN.py
 Dockerfile
 .devcontainer/
 pytorchopencv/models/
 controls/
+nodes/balloon_pos.pth

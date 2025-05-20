@@ -12,7 +12,7 @@ from iou import calculate_iou
 # ✅ 2️⃣ Load & Preprocess Image Data
 def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonDataset/labels_train.csv"):
     transform = transforms.Compose([
-        # 🔹 Apply transformations (Resize, ToTensor, Normalize)
+        #  Apply transformations (Resize, ToTensor, Normalize)
         transforms.Resize((832,368)),
         transforms.RandomHorizontalFlip(p=0.5),
         transforms.RandomRotation(30),
@@ -32,29 +32,30 @@ def load_data(batch_size=16, folder = "BalloonDataset/train", csv = "BalloonData
 def train_model(model, train_loader, num_epochs=500, learning_rate=0.0005):
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=1e-4)
     scheduler = optim.lr_scheduler.StepLR(optimizer=optimizer, step_size=100, gamma= 0.1)
-    # criterion = nn.MSELoss()  # 🔹 Define loss function
+    # criterion = nn.MSELoss()  # old loss
     criterion = nn.SmoothL1Loss()
 
     for epoch in range(num_epochs):
         for images, labels in train_loader:
-            # 🔹 Move images & labels to device (CPU/GPU)
+            # Move images & labels to device (CPU/GPU)
             images = images.to(device)
             labels = labels.to(device)
             scaling_vector = torch.tensor([1/8.02,1/8.15,1/8.02,1/8.15]).to(device)
 
-            # 🔹 Zero the gradients
+            # Zero the gradients
             optimizer.zero_grad()
-            # 🔹 Forward pass
+            #  Forward pass
             output = model(images)
             labels_scaled = labels*scaling_vector
-            # 🔹 Compute loss
+            #  Compute loss
             loss = criterion(output, labels_scaled)
-            # 🔹 Backward pass (gradient calculation)
+            #  Backward pass (gradient calculation)
             loss.backward()
-            # 🔹 Update weights
+            #  Update weights
             optimizer.step()
         print(f"Epoch {epoch+1}, Loss: {loss.item()}")
         scheduler.step()
+        #stop to avoid overfitting
         if loss.item() == 0.02:
             return
 
@@ -72,11 +73,12 @@ def test_model(model, test_loader, iou_threshold=0.5):
         for images, labels in test_loader:
             images = images.to(device)
             labels = labels.to(device)
+            #scale to correct pixels
             scaling_vector = torch.tensor([8.02,8.15,8.02,8.15]).to(device)
 
             outputs = model(images)
             mse_total += criterion(outputs, labels).item()
-
+            #calculation for accuracy
             for pred, true in zip(outputs, labels):
                 pred_scaled = pred*scaling_vector
                 iou = calculate_iou(pred_scaled, true)

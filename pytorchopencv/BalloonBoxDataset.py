@@ -18,7 +18,7 @@ class BalloonBBoxDataset(Dataset):
         row = self.annotations.iloc[idx]
         img_path = os.path.join(self.image_dir, row['filename'])
         image = Image.open(img_path).convert("RGB")
-
+        #output parameters
         bbox = torch.tensor([
             row['x'],
             row['y'],
