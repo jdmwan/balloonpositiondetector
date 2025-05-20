@@ -57,7 +57,7 @@ Model output will be saved as `balloon_pos.pth`.
 ### 3. Run ROS2 Node and Unity
 
 - On the Unity side, follow the [ROS–Unity Integration Tutorial](https://github.com/Unity-Technologies/ROS-TCP-Connector) to set up and run the **ROS TCP Connector**.
-- On the Mac/Windows side, run the Python node that publishes detection data, and use **roslibpy** or `rosbridge_server` to relay messages. (this is currently how its setup during development_
+- On the Mac/Windows side, run the Python node that publishes detection data, and use **roslibpy** or [rosbridge_server](https://github.com/RobotWebTools/rosbridge_suite) to relay messages. (this is currently how its setup during development)
 - Run `rosbridge_server` and `ROS TCP Connector` in the dockerfile provided.
 
 Make sure your ROS2 environment is sourced:
