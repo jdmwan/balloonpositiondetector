@@ -3,21 +3,25 @@
     "build": {
       "dockerfile": "../Dockerfile"
     },
+    "forwardPorts": [9090],
+
     "workspaceFolder": "/home/dev_ws",
     "mounts": [
       "source=ros2_ws,target=/home/dev_ws,type=volume"
     ],
     "runArgs": [
-      "-p", "10000:10000",        // Unity-ROS TCP
-      "--init",                   // Helps with signal handling
-      "--privileged"              // Optional: useful if using USB/camera access later
+      "-p", "10000:10000",   
+      "-p", "9090:9090",     
+      "--init",                   
+      "--privileged"              
     ],
     "customizations": {
       "vscode": {
         "extensions": [
           "ms-vscode.cpptools",
           "ms-python.python",
-          "ms-azuretools.vscode-docker"
+          "ms-azuretools.vscode-docker",
+          "ms-iot.vscode-ros"
         ],
         "settings": {
           "terminal.integrated.defaultProfile.linux": "bash"

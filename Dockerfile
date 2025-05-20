@@ -11,12 +11,11 @@ RUN apt update && apt install -y \
     cmake \
     python3-dev
 
+
 # Upgrade pip and install Python packages
 RUN python3 -m pip install --upgrade pip && \
     pip3 install \
     opencv-python \
-    torch \
-    torchvision \
     numpy \
     pandas
 
@@ -26,11 +25,6 @@ WORKDIR /home/dev_ws
 
 # Clone Unity’s ROS-TCP-Endpoint
 RUN git clone -b ROS2v0.7.0 https://github.com/Unity-Technologies/ROS-TCP-Endpoint /home/dev_ws/src/ros_tcp_endpoint
-
-# Create a custom ROS 2 package
-RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && \
-    cd /home/dev_ws/src && \
-    ros2 pkg create --build-type ament_python my_package"
 
 # Build the workspace
 RUN /bin/bash -c "source /opt/ros/foxy/setup.bash && \
